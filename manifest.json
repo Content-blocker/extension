@@ -1,13 +1,26 @@
 {
-	  "manifest_version": 2,
-	  "name": "Blocker Extension",
-	  "version": "0.0.0.1",
-	  "description": "Block unwanted content.",
-	  "permissions": [],
-	  "browser_action": {
-		  "default_title": "Blocker Extension",
-		  "default_icon": "icon.png",
-		  "default_popup": "popup.html"
-	  },
-	  "content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'"
+  "manifest_version": 2,
+  "name": "Blocker Extension",
+  "version": "0.0.0.1",
+  "description": "Block unwanted content.",
+  "permissions":  [
+	"webNavigation",
+	"storage",
+	"tabs",
+	"activeTab",
+	"<all_urls>",
+	"background",
+	"*://*/*"
+  ],
+  "content_scripts": [{
+	"matches": ["<all_urls>"],
+	"js": ["content.js"],
+	"all_frames": true
+  }],
+  "browser_action": {
+	  "default_title": "Blocker Extension",
+	  "default_icon": "icon.png",
+	  "default_popup": "popup.html"
+  },
+  "content_security_policy": "script-src 'self'; object-src 'self'"
 }
