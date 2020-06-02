@@ -5,6 +5,48 @@ function blockElement(e, fill){
     e.innerHTML = fill;
 }
 
+function containsKW(keywords, string) {
+    //returns true if a keyword in keywords array is in string
+    string = string.replace(/[^A-Za-z]/g, '');
+    string = string.toUpperCase();
+    for (var i = 0; i < keywords.length; ++i) {
+        var curKW = keywords[i].toUpperCase();
+        curKW = curKW.replace(/[^A-Za-z]/g, '');
+        //to dvoje removamo, keywordi so lahko preprocessani v upperstring, brez ostalih simbolov
+        if (string.includes(curKW)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function getTextNodes(doc) {
+    //returns all text nodes, doc= document.body for start
+    var returnAr = [];
+    var children = doc.childNodes;
+    for (var i = 0; i < children.length; ++i) {
+        if (children[i].hasChildNodes() && children[i].tagName != 'script') {
+            returnAr = returnAr.concat(getTextNodes(children[i]));
+        }
+        if (children[i].nodeType == 3) {
+            returnAr.push(children[i]);
+        }
+    }
+    return returnAr;
+}
+
+function processTextNodes(keywords, doc) {
+    //returns array of text nodes to be cenzured
+    var textNodes = getTextNodes(doc);
+    var ar = [];
+    for (var i = 0; i < textNodes.length; ++i) {
+        if (containsKW(keywords, textNodes[i].textContent)) {
+            ar.push(textNodes[i]);
+        }
+    }
+    return ar; //now decide how to cenzure this array (possibly get parent)
+}
+
 function recBlock(e, content, fill){
     var nodes = e.childNodes;
     for(var i=0;i<nodes.length;++i){
